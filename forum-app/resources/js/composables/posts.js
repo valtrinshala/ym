@@ -1,4 +1,4 @@
-import {ref} from 'vue'
+import { ref, inject } from 'vue'
 import {useRouter} from 'vue-router'
 
 
@@ -8,6 +8,8 @@ export default function usePosts() {
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
+    const swal = inject('$swal')
+
 
     const getPosts = async () => {
         axios.get('/api/posts')
@@ -32,6 +34,10 @@ export default function usePosts() {
         axios.post('/api/posts', post)
             .then(response => {
                 router.push({ name: 'posts.index' })
+                swal({
+                    icon: 'success',
+                    title: 'Post saved successfully'
+                })
             })
             .catch(error => {
                 if (error.response?.data) {
@@ -40,6 +46,30 @@ export default function usePosts() {
                 }
             })
     }
+
+    const updatePost = async (post) => {
+        if (isLoading.value) return;
+
+        isLoading.value = true
+        validationErrors.value = {}
+
+        axios.put('/api/posts/' + post.id, post)
+            .then(response => {
+                router.push({ name: 'posts.index' })
+                swal({
+                    icon: 'success',
+                    title: 'Post saved successfully'
+                })
+            })
+            .catch(error => {
+                if (error.response?.data) {
+                    validationErrors.value = error.response.data.errors
+                }
+            })
+            .finally(() => isLoading.value = false)
+    }
+
+    return { posts, post, getPosts, getPost, storePost, updatePost, validationErrors, isLoading }
 
     return { posts, post, getPosts, getPost, storePost, validationErrors, isLoading }
 }
