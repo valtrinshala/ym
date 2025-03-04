@@ -1,22 +1,14 @@
-import {ref, inject} from 'vue'
-import {useRouter} from 'vue-router'
-
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 export default function usePosts() {
     const posts = ref([])
-    const post = ref({})
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
+    const post = ref({})
     const swal = inject('$swal')
-
-
-    const getPosts = async () => {
-        axios.get('/api/posts')
-            .then(response => {
-                posts.value = response.data.data;
-            })
-    }
 
     const getPost = async (id) => {
         axios.get('/api/posts/' + id)
@@ -25,15 +17,25 @@ export default function usePosts() {
             })
     }
 
-    const storePost = async (post) => {
+    const getPosts = async (search = '') => {
+        axios.get('/api/posts', { params: { q: search } })
+            .then(response => {
+                posts.value = response.data.data;
+            })
+            .catch(error => {
+                console.error('Error fetching posts:', error);
+            })
+    }
+
+    const storePost = async (postData) => {
         if (isLoading.value) return;
 
         isLoading.value = true
         validationErrors.value = {}
 
-        axios.post('/api/posts', post)
+        axios.post('/api/posts', postData)
             .then(response => {
-                router.push({name: 'posts.index'})
+                router.push({ name: 'posts.index' })
                 swal({
                     icon: 'success',
                     title: 'Post saved successfully'
@@ -42,20 +44,20 @@ export default function usePosts() {
             .catch(error => {
                 if (error.response?.data) {
                     validationErrors.value = error.response.data.errors
-                    isLoading.value = false
                 }
+                isLoading.value = false
             })
     }
 
-    const updatePost = async (post) => {
+    const updatePost = async (postData) => {
         if (isLoading.value) return;
 
         isLoading.value = true
         validationErrors.value = {}
 
-        axios.put('/api/posts/' + post.id, post)
+        axios.put('/api/posts/' + postData.id, postData)
             .then(response => {
-                router.push({name: 'posts.index'})
+                router.push({ name: 'posts.index' })
                 swal({
                     icon: 'success',
                     title: 'Post saved successfully'

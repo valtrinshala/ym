@@ -22,4 +22,19 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    //Scope
+    public function scopeSearch($query, $term)
+    {
+        if ($term) {
+            $query->where(function ($q) use ($term) {
+                $q->where('title', 'like', '%' . $term . '%')
+                    ->orWhere('content', 'like', '%' . $term . '%')
+                    ->orWhereHas('comments', function ($q2) use ($term) {
+                        $q2->where('body', 'like', '%' . $term . '%');
+                    });
+            });
+        }
+        return $query;
+    }
 }

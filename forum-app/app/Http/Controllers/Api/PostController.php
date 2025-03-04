@@ -13,9 +13,15 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return PostResource::collection(Post::all());
+        $search = $request->get('q', '');
+        $posts = Post::with('user', 'comments')
+            ->search($search)
+            ->latest()
+            ->get();
+
+        return PostResource::collection($posts);
     }
 
     public function store(PostRequest $request): PostResource
