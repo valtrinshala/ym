@@ -1,5 +1,5 @@
-import { ref, reactive, inject } from 'vue'
-import { useRouter } from "vue-router";
+import {ref, reactive, inject} from 'vue'
+import {useRouter} from "vue-router";
 
 const user = reactive({
     name: '',
@@ -16,6 +16,7 @@ export default function useAuth() {
         password: '',
         remember: false
     })
+
 
     const submitLogin = async () => {
         if (processing.value) return
@@ -38,9 +39,10 @@ export default function useAuth() {
     const loginUser = (response) => {
         user.name = response.data.name
         user.email = response.data.email
+        user.email_verified_at = response.data.email_verified_at
 
         localStorage.setItem('loggedIn', JSON.stringify(true))
-        router.push({ name: 'posts.index' })
+        router.push({name: 'posts.index'})
     }
 
     const logout = async () => {
@@ -49,7 +51,7 @@ export default function useAuth() {
         processing.value = true
 
         axios.post('/logout')
-            .then(response => router.push({ name: 'login' }))
+            .then(response => router.push({name: 'login'}))
             .catch(error => {
                 swal({
                     icon: 'error',
@@ -69,5 +71,5 @@ export default function useAuth() {
             })
     }
 
-    return { loginForm, validationErrors, processing, submitLogin, user, getUser, logout }
+    return {loginForm, validationErrors, processing, submitLogin, user, getUser, logout}
 }

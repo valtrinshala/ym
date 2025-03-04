@@ -2,7 +2,7 @@ import { ref, inject } from 'vue'
 import axios from 'axios'
 
 export default function useVerification() {
-    const swal = inject('$swal')         // If you're using SweetAlert via inject
+    const swal = inject('$swal')
     const sending = ref(false)
     const error = ref(null)
 
