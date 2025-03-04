@@ -6,6 +6,7 @@ export default function usePosts() {
     const posts = ref([])
     const router = useRouter()
     const validationErrors = ref({})
+    const isLoading = ref(false)
 
     const getPosts = async () => {
         axios.get('/api/posts')
@@ -15,16 +16,22 @@ export default function usePosts() {
     }
 
     const storePost = async (post) => {
+        if (isLoading.value) return;
+
+        isLoading.value = true
+        validationErrors.value = {}
+
         axios.post('/api/posts', post)
             .then(response => {
-                router.push({name: 'posts.index'})
+                router.push({ name: 'posts.index' })
             })
             .catch(error => {
                 if (error.response?.data) {
                     validationErrors.value = error.response.data.errors
+                    isLoading.value = false
                 }
             })
     }
 
-    return { posts, getPosts, storePost, validationErrors }
+    return { posts, getPosts, storePost, validationErrors, isLoading }
 }
