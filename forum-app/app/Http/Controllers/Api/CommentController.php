@@ -8,6 +8,7 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Notifications\NewCommentNotification;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Post $post): AnonymousResourceCollection
     {
         $comments = $post->comments()->with('user')->latest()->get();
@@ -25,6 +28,8 @@ class CommentController extends Controller
 
     public function store(CommentRequest $request, Post $post): CommentResource
     {
+        $this->authorize('create', [Comment::class, $post]);
+
         $validated = $request->validated();
 
         $comment = $post->comments()->create([
@@ -54,9 +59,7 @@ class CommentController extends Controller
 
     public function update(CommentRequest $request, Post $post, Comment $comment): CommentResource|JsonResponse
     {
-         if ($comment->user_id !== Auth::id()) {
-             return response()->json(['error' => 'Forbidden'], 403);
-         }
+        $this->authorize('update', $post);
 
         if ($comment->post_id !== $post->id) {
             abort(404);

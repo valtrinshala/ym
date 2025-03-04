@@ -15,7 +15,6 @@ class PostController extends Controller
 {
     use AuthorizesRequests;
 
-
     public function index(Request $request): AnonymousResourceCollection
     {
         $search = $request->get('q', '');
