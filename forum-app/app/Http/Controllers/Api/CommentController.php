@@ -48,9 +48,7 @@ class CommentController extends Controller
 
     public function show(Post $post, Comment $comment): CommentResource
     {
-        if ($comment->post_id !== $post->id) {
-            abort(404);
-        }
+        $this->authorize('viewForPost', [$comment, $post]);
 
         $comment->load('user');
 
@@ -59,15 +57,14 @@ class CommentController extends Controller
 
     public function update(CommentRequest $request, Post $post, Comment $comment): CommentResource|JsonResponse
     {
-        $this->authorize('update', $post);
-
-        if ($comment->post_id !== $post->id) {
-            abort(404);
-        }
+        $this->authorize('update', [$comment,$post]);
 
         $validated = $request->validated();
 
-        $comment->update($validated);
+        $comment->update(array_merge($validated, [
+            'edited_at' => now()
+        ]));
+
         $comment->load('user');
 
         return new CommentResource($comment);
@@ -75,13 +72,7 @@ class CommentController extends Controller
 
     public function destroy(Post $post, Comment $comment): JsonResponse
     {
-         if ($comment->user_id !== Auth::id()) {
-             return response()->json(['error' => 'Forbidden'], 403);
-         }
-
-        if ($comment->post_id !== $post->id) {
-            abort(404);
-        }
+        $this->authorize('delete', [$comment,$post]);
 
         $comment->delete();
 
