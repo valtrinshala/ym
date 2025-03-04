@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Carbon;
 
 class PostPolicy
 {
@@ -45,8 +46,13 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $post->user_id === $user->id && !$post->comments()->exists();
+        $oneYearAgo = Carbon::now()->subYear();
+
+        $hasRecentComments = $post->comments()->where('created_at', '>=', $oneYearAgo)->exists();
+
+        return $post->user_id === $user->id && (!$post->comments()->exists() || (!$hasRecentComments && $post->created_at->lt($oneYearAgo)));
     }
+
 
     /**
      * Determine whether the user can restore the model.

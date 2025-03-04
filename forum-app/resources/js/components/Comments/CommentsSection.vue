@@ -43,13 +43,14 @@
                             <h4 class="font-semibold text-gray-700">
                                 {{ comment.user ? comment.user.name : 'Guest' }}
                             </h4>
-                            <span class="text-sm text-gray-500">
-                {{ formatDate(comment.created_at) }}
-                <span v-if="comment.updated_at !== comment.created_at">
-                  (edited)
-                </span>
-              </span>
+                            <div class="text-sm text-gray-500">
+                                {{ formatDate(comment.created_at) }}
+                                <div v-if="comment.edited_at">
+                                    (edited)
+                                </div>
+                            </div>
                         </div>
+
                         <div v-if="editCommentId === comment.id">
                             <!-- Edit Mode -->
                             <textarea
@@ -100,7 +101,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import {reactive, ref, onMounted} from 'vue'
 import useComments from '@/composables/comments'
 import useAuth from '@/composables/auth'
 
@@ -115,8 +116,8 @@ const props = defineProps({
     }
 })
 
-const { comments, validationErrors, isLoading, getComments, storeComment, updateComment, deleteComment } = useComments()
-const { user } = useAuth()
+const {comments, validationErrors, isLoading, getComments, storeComment, updateComment, deleteComment} = useComments()
+const {user} = useAuth()
 
 comments.value = props.initialComments
 
