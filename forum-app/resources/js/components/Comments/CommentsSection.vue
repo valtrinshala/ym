@@ -2,28 +2,35 @@
     <div class="mt-4 rounded-lg bg-white p-6 shadow-sm">
         <div class="mb-4">
             <h3 class="mb-2 text-lg font-semibold text-gray-700">Discussion</h3>
-            <div class="flex space-x-3">
-                <div class="flex-1">
-          <textarea
-              v-model="newComment.body"
-              class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              rows="2"
-              placeholder="Write a comment..."
-          ></textarea>
-                    <div class="mt-2 text-right">
-                        <button
-                            @click="submitComment"
-                            class="rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
-                        >
-                            Post
-                        </button>
-                    </div>
-                    <div v-if="validationErrors.body" class="text-red-500 text-sm mt-1">
-                        {{ validationErrors.body[0] }}
+
+            <div v-if="user.email_verified_at">
+                <div class="flex space-x-3">
+                    <div class="flex-1">
+            <textarea
+                v-model="newComment.body"
+                class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                rows="2"
+                placeholder="Write a comment..."
+            ></textarea>
+                        <div class="mt-2 text-right">
+                            <button
+                                @click="submitComment"
+                                class="rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
+                            >
+                                Post
+                            </button>
+                        </div>
+                        <div v-if="validationErrors.body" class="text-red-500 text-sm mt-1">
+                            {{ validationErrors.body[0] }}
+                        </div>
                     </div>
                 </div>
             </div>
+            <div v-else class="text-sm text-gray-600">
+                Please verify your email to add a comment.
+            </div>
         </div>
+
         <div class="space-y-4">
             <div
                 v-for="comment in comments"
@@ -70,7 +77,7 @@
                         </div>
                         <div v-else>
                             <p class="leading-relaxed text-gray-600 mb-1">{{ comment.body }}</p>
-                            <div  class="flex items-center space-x-2 text-sm">
+                            <div class="flex items-center space-x-2 text-sm">
                                 <button
                                     @click="startEditComment(comment.id, comment.body)"
                                     class="text-blue-500 hover:underline"
@@ -95,6 +102,7 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
 import useComments from '@/composables/comments'
+import useAuth from '@/composables/auth'
 
 const props = defineProps({
     postId: {
@@ -107,12 +115,11 @@ const props = defineProps({
     }
 })
 
-
 const { comments, validationErrors, isLoading, getComments, storeComment, updateComment, deleteComment } = useComments()
+const { user } = useAuth()
 
 comments.value = props.initialComments
 
-// New comment form data
 const newComment = reactive({
     body: ''
 })
@@ -120,7 +127,6 @@ const newComment = reactive({
 const editCommentId = ref(null)
 const editCommentBody = ref('')
 
-const userAvatar = 'https://via.placeholder.com/40'
 
 function formatDate(dateString) {
     if (!dateString) return ''
@@ -157,4 +163,3 @@ function deleteExistingComment(commentId) {
     deleteComment(props.postId, commentId)
 }
 </script>
-
