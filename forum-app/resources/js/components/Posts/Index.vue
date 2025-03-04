@@ -16,11 +16,6 @@
                 <div class="mb-4 rounded-lg bg-white p-6 shadow-sm">
                     <div class="mb-2 flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <img
-                                class="h-10 w-10 rounded-full object-cover"
-                                src="https://via.placeholder.com/40"
-                                alt="Author Avatar"
-                            />
                             <div>
                                 <p class="font-semibold text-gray-700">
                                     {{ post.user ? post.user.name : 'Unknown' }}

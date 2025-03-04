@@ -3,11 +3,6 @@
         <div class="mb-4">
             <h3 class="mb-2 text-lg font-semibold text-gray-700">Discussion</h3>
             <div class="flex space-x-3">
-                <img
-                    class="h-10 w-10 rounded-full object-cover"
-                    :src="userAvatar"
-                    alt="Your Avatar"
-                />
                 <div class="flex-1">
           <textarea
               v-model="newComment.body"
@@ -36,11 +31,6 @@
                 class="rounded-lg bg-gray-50 p-4"
             >
                 <div class="flex items-start space-x-3">
-                    <img
-                        class="h-10 w-10 rounded-full object-cover"
-                        :src="comment.user?.avatar || 'https://via.placeholder.com/40'"
-                        alt="Commenter Avatar"
-                    />
                     <div class="flex-1">
                         <div class="mb-1 flex items-center justify-between">
                             <h4 class="font-semibold text-gray-700">

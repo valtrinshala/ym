@@ -6,6 +6,9 @@ Route::post('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController:
 Route::post('logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy']);
 
 
+Route::get('/login', function () {
+    return redirect('/#/login');
+})->name('login');
 
 Route::view('/{any?}', 'dashboard')
     ->where('any', '.*');
