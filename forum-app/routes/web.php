@@ -10,5 +10,8 @@ Route::get('/login', function () {
     return redirect('/#/login');
 })->name('login');
 
+
 Route::view('/{any?}', 'dashboard')
-    ->where('any', '.*');
+    ->where('any', '^(?!docs).*');
+
+
