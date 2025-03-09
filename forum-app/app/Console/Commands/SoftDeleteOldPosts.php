@@ -16,15 +16,12 @@ class SoftDeleteOldPosts extends Command
     {
         $oneYearAgo = Carbon::now()->subYear();
 
-        // First, find posts with zero comments that are older than a year
-        // These are easy to find with the counter
+
         $postsWithNoComments = Post::query()
             ->where('comments_count', 0)
             ->whereDate('created_at', '<', $oneYearAgo)
             ->delete();
 
-        // Then find posts with comments, but no recent activity
-        // For this, we still need the more complex query
         $postsWithOldComments = Post::query()
             ->where('comments_count', '>', 0)
             ->whereNotExists(function ($query) use ($oneYearAgo) {
