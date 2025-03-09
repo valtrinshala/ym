@@ -9,7 +9,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Comment extends Model
 {
     use HasFactory;
+
     protected $fillable = ['post_id', 'user_id', 'body', 'edited_at'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($comment) {
+            $comment->post()->increment('comments_count');
+        });
+
+        static::deleted(function ($comment) {
+            $comment->post()->decrement('comments_count');
+        });
+    }
+
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);

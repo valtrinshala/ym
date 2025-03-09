@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
     use SoftDeletes,HasFactory;
-    protected $fillable = ['user_id', 'title', 'content'];
+    protected $fillable = ['user_id', 'title', 'content', 'comments_count'];
 
     public function user(): BelongsTo
     {
