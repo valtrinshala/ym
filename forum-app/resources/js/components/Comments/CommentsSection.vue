@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import {reactive, ref, onMounted} from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import useComments from '@/composables/comments'
 import useAuth from '@/composables/auth'
 
@@ -116,10 +116,12 @@ const props = defineProps({
     }
 })
 
-const {comments, validationErrors, isLoading, getComments, storeComment, updateComment, deleteComment} = useComments()
-const {user} = useAuth()
+const { comments, validationErrors, isLoading, getComments, storeComment, updateComment, deleteComment } = useComments()
+const { user } = useAuth()
 
-comments.value = props.initialComments
+onMounted(() => {
+    getComments(props.postId)
+})
 
 const newComment = reactive({
     body: ''
@@ -127,7 +129,6 @@ const newComment = reactive({
 
 const editCommentId = ref(null)
 const editCommentBody = ref('')
-
 
 function formatDate(dateString) {
     if (!dateString) return ''
