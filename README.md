@@ -145,7 +145,7 @@ The API documentation can be found at `/docs/api`.
 
 - **Feature & Unit Tests**:
     - The application includes **feature tests for posts, comments, and user authentication**.
-
+    - All tests are written using **Pest**.
 - **API Documentation**:
     - API documentation is **automatically generated**.
     - Accessible at:
