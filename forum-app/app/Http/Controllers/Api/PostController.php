@@ -34,7 +34,7 @@ class PostController extends Controller
 
         $post = Post::query()
             ->create([
-                'user_id' => Auth::id() ?? 1,
+                'user_id' => Auth::id(),
                 'title' => $validated['title'],
                 'content' => $validated['content'],
             ]);
