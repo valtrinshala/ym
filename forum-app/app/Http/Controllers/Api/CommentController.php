@@ -33,7 +33,7 @@ class CommentController extends Controller
         $validated = $request->validated();
 
         $comment = $post->comments()->create([
-            'user_id' => Auth::id() ?? 1,
+            'user_id' => Auth::id(),
             'body' => $validated['body'],
         ]);
 
