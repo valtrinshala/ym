@@ -52,7 +52,7 @@ It includes features like **user authentication, post creation, comments, notifi
 ### **Step 1: Clone the Repository**
 
 ```bash
-git clone https://github.com/valtrinshala/ym-assignmnet.git
+git clone https://github.com/valtrinshala/ym.git
 cd forum-app
 ```
 
