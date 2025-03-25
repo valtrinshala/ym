@@ -127,7 +127,6 @@ The API documentation can be found at `/docs/api`.
 
 - **Post Search**:
     - Users can **search for posts by title, content, or comments**.
-    - 🔹 *(Note: Search is implemented using Laravel Scout.)*
 
 - **Email Notifications**:
     - Post authors **receive an email notification** when a new comment is added to their post.
